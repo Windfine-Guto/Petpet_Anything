@@ -346,6 +346,7 @@
 <_IOS_quality>50</_IOS_quality>
 <_IOS_forcesoftware>1</_IOS_forcesoftware>
 <_IOS_maxstreams>10</_IOS_maxstreams>
+<_lang_default_filename_prefix></_lang_default_filename_prefix>
 <_lang_default_rebuild>0</_lang_default_rebuild>
 </default_soundbank_props>
 <soundbank>
@@ -541,6 +542,7 @@
 <_IOS_quality>50</_IOS_quality>
 <_IOS_forcesoftware>1</_IOS_forcesoftware>
 <_IOS_maxstreams>10</_IOS_maxstreams>
+<_lang_default_filename_prefix></_lang_default_filename_prefix>
 <_lang_default_rebuild>1</_lang_default_rebuild>
 </soundbank>
 <notes></notes>
