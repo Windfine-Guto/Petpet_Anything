@@ -16,7 +16,7 @@ local function fn1()
     inst.AnimState:PlayAnimation("handpet", true)
 	-- inst.AnimState:SetFinalOffset(1)
 
-	inst.Transform:SetNoFaced()
+	-- inst.Transform:SetNoFaced()
 
     inst:AddTag("FX")
     inst:AddTag("DECOR")

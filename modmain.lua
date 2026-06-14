@@ -7,6 +7,8 @@ PrefabFiles = {
     "hand_pet_q"
 }
 
+-- local intensity = GetModConfigData() or 1.5
+
 local function DoWobble(inst, duration, intensity)
     duration = duration or 0.5
     intensity = intensity or 1.5
@@ -27,11 +29,11 @@ local function DoWobble(inst, duration, intensity)
 
         local x1, y1, x2, y2 = inst.AnimState:GetVisualBB()
         local height = -y1 + y2
-        local base_width = 1.0
-        local anim_width = x2 - x1
-        local scale = anim_width / base_width/1.5
+        -- local base_width = 1.0
+        -- local anim_width = x2 - x1
+        -- local scale = anim_width / base_width/1.5
         -- handpet.Transform:SetScale(scale, scale, scale)
-        handpet.Transform:SetPosition(0, height, 0)
+        handpet.Transform:SetPosition(0, height*0.8, 0)
 
         inst._hand_pet = handpet
     end
@@ -79,15 +81,14 @@ HAND_PET_Q.strfn = function (act)
     else
         return "HAND_PET_EN"
     end
-   
 end
-HAND_PET_Q.priority = 10
+HAND_PET_Q.priority = 0
 HAND_PET_Q.instant = true
 HAND_PET_Q.mount_valid = true
 HAND_PET_Q.distance = 20
 HAND_PET_Q.fn = function (act)
     local target = act.target
-    DoWobble(target,1)
+    DoWobble(target,1,1)
     return true
 end
 AddAction(HAND_PET_Q)
