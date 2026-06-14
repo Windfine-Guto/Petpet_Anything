@@ -75,7 +75,7 @@ local function DoWobble(inst, duration, intensity)
             return
         end
 
-        if inst.SoundEmitter and inst._sound_time>0.3 then
+        if inst.SoundEmitter and inst._sound_time>0.3 and duration>1 then
             if GetModConfigData(modid..'hand_type')==1 then
                 if duration==4 then
 
