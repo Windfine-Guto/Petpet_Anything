@@ -6,7 +6,7 @@ author = 'over_dragon、Guto'
 
 forumthread = ''
 api_version = 10
-priority = -999 -- 加载优先级，越低加载越晚，默认为0
+priority = -1 -- 加载优先级，越低加载越晚，默认为0
 
 dst_compatible = true -- 联机版适配性
 dont_starve_compatible = false -- 单机版适配性
@@ -25,14 +25,30 @@ local LANGS = {
         name = '摸摸万物',
         description = '',
         config = {
-            
+            {modid..'hand_type','摸的工具','',1,{
+                {'手',1},
+                {'钢管',2},
+            }},
+            {modid..'duration','单次时长','4秒且是手有BGM',1,{
+                {'1秒',1},
+                {'3秒',3},
+                {'4秒',4},
+            }},
             }
     },
     ['en'] = {
         name = 'PetPet Anything',
         description = '',
         config = {
-            
+            {modid..'hand_type', 'Petting Tool', '', 1, {
+                {'Hand', 1},
+                {'Steel Pipe', 2},
+            }},
+            {modid..'duration', 'Duration per action', '', 1, {
+                {'1 second', 1},
+                {'3 seconds', 3},
+                {'4 seconds', 4},
+            }},
         }
     }
 }

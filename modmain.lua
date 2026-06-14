@@ -1,13 +1,17 @@
 GLOBAL.setmetatable(env,{__index=function(t,k) return GLOBAL.rawget(GLOBAL,k) end})
 
 Assets = {
+    Asset("SOUNDPACKAGE", "sound/Petpet_Anything.fev"),
+    Asset("SOUND", "sound/Petpet_Anything.fsb"),
 }
 
 PrefabFiles = {
     "hand_pet_q"
 }
 
--- local intensity = GetModConfigData() or 1.5
+local modid = 'handpet'
+local duration = GetModConfigData(modid..'duration','单次时长') or 1
+local hand_type = GetModConfigData(modid..'hand_type')
 
 local function DoWobble(inst, duration, intensity)
     duration = duration or 0.5
@@ -23,7 +27,7 @@ local function DoWobble(inst, duration, intensity)
     end
 
     if not inst._hand_pet then
-        local handpet = SpawnPrefab("hand_pet_q")
+        local handpet = GetModConfigData(modid..'hand_type')==1 and SpawnPrefab("hand_pet_q") or SpawnPrefab("metal_pipe_q")
         handpet.entity:SetParent(inst.entity)
         local sx, sy, sz = inst._wobble_original_scale[1], inst._wobble_original_scale[2], inst._wobble_original_scale[3]
 
@@ -38,11 +42,25 @@ local function DoWobble(inst, duration, intensity)
         inst._hand_pet = handpet
     end
 
+    if inst.SoundEmitter then
+        if GetModConfigData(modid..'hand_type')==1 then
+            if duration==4 then
+                inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/petpet_music")
+            else
+                inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/rubber_duck")
+            end
+        else
+            inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/metal_pipe")
+        end
+    end
+
     local sx, sy, sz = inst._wobble_original_scale[1], inst._wobble_original_scale[2], inst._wobble_original_scale[3]
     inst._wobble_time = 0
+    inst._sound_time = 0
 
     inst._wobble_task = inst:DoPeriodicTask(0, function()
         inst._wobble_time = inst._wobble_time + 0.016
+        inst._sound_time = inst._sound_time + 0.016
 
         if inst._wobble_time >= duration then
             inst.Transform:SetScale(sx, sy, sz)
@@ -55,6 +73,19 @@ local function DoWobble(inst, duration, intensity)
                 inst._hand_pet = nil
             end
             return
+        end
+
+        if inst.SoundEmitter and inst._sound_time>0.3 then
+            if GetModConfigData(modid..'hand_type')==1 then
+                if duration==4 then
+
+                else
+                    inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/rubber_duck")
+                end
+            else
+                inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/metal_pipe")
+            end
+            inst._sound_time = 0
         end
 
         local t = inst._wobble_time
@@ -88,7 +119,7 @@ HAND_PET_Q.mount_valid = true
 HAND_PET_Q.distance = 20
 HAND_PET_Q.fn = function (act)
     local target = act.target
-    DoWobble(target,1,1)
+    DoWobble(target,duration,1)
     return true
 end
 AddAction(HAND_PET_Q)

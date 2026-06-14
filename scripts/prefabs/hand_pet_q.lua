@@ -3,7 +3,7 @@ local assets =
     Asset("ANIM", "anim/handpet.zip"),
 }
 
-local function fn1()
+local function fn(data)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -11,12 +11,17 @@ local function fn1()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
-    inst.AnimState:SetBank("handpet_q")
-    inst.AnimState:SetBuild("handpet_q")
-    inst.AnimState:PlayAnimation("handpet", true)
+    inst.AnimState:SetBank("handpet")
+    inst.AnimState:SetBuild("handpet")
+    if data.type=="hand" then
+        inst.AnimState:PlayAnimation("handpet", true)
+    else
+        inst.AnimState:PlayAnimation("metal_pipe", true)
+    end
+    
 	-- inst.AnimState:SetFinalOffset(1)
 
-	-- inst.Transform:SetNoFaced()
+	inst.Transform:SetNoFaced()
 
     inst:AddTag("FX")
     inst:AddTag("DECOR")
@@ -32,4 +37,17 @@ local function fn1()
     return inst
 end
 
-return Prefab("hand_pet_q", fn1, assets)
+local function HandFn()
+    return fn({
+        type = "hand",
+    })
+end
+
+local function MetalFn()
+    return fn({
+        type = "metal_pipe",
+    })
+end
+
+return Prefab("hand_pet_q", HandFn, assets),
+        Prefab("metal_pipe_q", MetalFn, assets)
