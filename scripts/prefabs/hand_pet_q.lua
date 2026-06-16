@@ -1,6 +1,8 @@
 local assets =
 {
     Asset("ANIM", "anim/handpet.zip"),
+    Asset("SOUNDPACKAGE", "sound/Petpet_Anything.fev"),
+    Asset("SOUND", "sound/Petpet_Anything.fsb"),
 }
 
 local function fn(data)
@@ -14,13 +16,15 @@ local function fn(data)
     inst.AnimState:SetBank("handpet")
     inst.AnimState:SetBuild("handpet")
     if data.type=="hand" then
-        inst.AnimState:PlayAnimation("handpet", true)
+        inst.AnimState:PlayAnimation("handpet")
+        inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/rubber_duck")
     else
-        inst.AnimState:PlayAnimation("metal_pipe", true)
+        inst.AnimState:PlayAnimation("metal_pipe")
+        inst.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/metal_pipe")
     end
-    
-	-- inst.AnimState:SetFinalOffset(1)
 
+	-- inst.AnimState:SetFinalOffset(1)
+    inst.Transform:SetScale(3, 3, 3)
 	inst.Transform:SetNoFaced()
 
     inst:AddTag("FX")
@@ -33,6 +37,8 @@ local function fn(data)
     end
 
     inst.persists = false
+
+    inst:ListenForEvent("animover", function() inst:Remove() end)
 
     return inst
 end

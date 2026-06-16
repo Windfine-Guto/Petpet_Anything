@@ -29,10 +29,11 @@ local LANGS = {
                 {'手',1},
                 {'钢管',2},
             }},
-            {modid..'duration','单次时长','4秒且是手有BGM',1,{
-                {'1秒',1},
-                {'3秒',3},
-                {'4秒',4},
+            {modid..'hand_distance','摸的距离','手的长度',3,{
+                {'3',3},
+                {'5',5},
+                {'10',10},
+                {'20',20}
             }},
             }
     },
@@ -44,10 +45,11 @@ local LANGS = {
                 {'Hand', 1},
                 {'Steel Pipe', 2},
             }},
-            {modid..'duration', 'Duration per action', '', 1, {
-                {'1 second', 1},
-                {'3 seconds', 3},
-                {'4 seconds', 4},
+            {modid..'hand_distance', 'Hand Reach Distance', 'Hand Length', 3, {
+                {'3',3},
+                {'5',5},
+                {'10',10},
+                {'20',20}
             }},
         }
     }
