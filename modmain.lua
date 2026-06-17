@@ -14,6 +14,7 @@ local distance = GetModConfigData(modid..'hand_distance') or 3
 local function DoWobble(inst,doer)
     local duration = 0.3
     local intensity = 1
+    local interval = 0.2  ---计数时间间隔
 
     if inst._hand_pet_count==nil then
         inst._hand_pet_count = 0
@@ -43,10 +44,11 @@ local function DoWobble(inst,doer)
 
 
     if GetModConfigData(modid..'hand_type')==1 then
-        if inst._hand_pet_count>=3 and doer.components.timer and not doer.components.timer:TimerExists("petpet_music_q_cd") then
+        ---摸的次数，到达就播放BGM
+        if inst._hand_pet_count>=10 and doer.components.timer and not doer.components.timer:TimerExists("petpet_music_q_cd") then
             doer.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/petpet_music")
             inst._hand_pet_count = 0
-            doer.components.timer:StartTimer("petpet_music_q_cd",5.2)
+            doer.components.timer:StartTimer("petpet_music_q_cd",6)
         end
     end
 
@@ -56,12 +58,15 @@ local function DoWobble(inst,doer)
     inst._wobble_task = inst:DoPeriodicTask(0, function()
         inst._wobble_time = inst._wobble_time + 0.016
 
+        if inst._wobble_time >= interval then
+            inst._hand_pet_count = nil
+        end
+
         if inst._wobble_time >= duration then
             inst.Transform:SetScale(sx, sy, sz)
             inst._wobble_task:Cancel()
             inst._wobble_task = nil
             inst._wobble_original_scale = nil
-            inst._hand_pet_count = nil
             return
         end
 

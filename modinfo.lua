@@ -23,7 +23,7 @@ icon = 'modicon.tex' -- 图标
 local LANGS = {
     ['zh'] = {
         name = '摸摸万物',
-        description = '',
+        description = '如果你一直摸一个东西，就会播放一首神秘妙妙音乐。',
         config = {
             {modid..'hand_type','摸的工具','',1,{
                 {'手',1},
@@ -39,7 +39,7 @@ local LANGS = {
     },
     ['en'] = {
         name = 'PetPet Anything',
-        description = '',
+        description = 'A mysterious whimsical melody will play if you keep petting an object.',
         config = {
             {modid..'hand_type', 'Petting Tool', '', 1, {
                 {'Hand', 1},
