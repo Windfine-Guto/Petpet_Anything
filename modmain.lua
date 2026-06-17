@@ -10,6 +10,11 @@ PrefabFiles = {
 
 local modid = 'handpet'
 local distance = GetModConfigData(modid..'hand_distance') or 3
+local handpet_tool = {
+    [1] = "hand_pet_q",
+    [2] = "metal_pipe_q",
+}
+local tool_size = 2
 
 local function DoWobble(inst,doer)
     local duration = 0.3
@@ -31,19 +36,19 @@ local function DoWobble(inst,doer)
         inst._wobble_original_scale = {inst.Transform:GetScale()}
     end
 
-    local handpet = GetModConfigData(modid..'hand_type')==1 and SpawnPrefab("hand_pet_q") or SpawnPrefab("metal_pipe_q")
+    if doer._handpet_tool_select==nil then
+        doer._handpet_tool_select = 1
+    end
+
+    local handpet = SpawnPrefab(handpet_tool[doer._handpet_tool_select])
     handpet.entity:SetParent(inst.entity)
 
     local x1, y1, x2, y2 = inst.AnimState:GetVisualBB()
     local height = -y1 + y2
-    -- local base_width = 1.0
-    -- local anim_width = x2 - x1
-    -- local scale = anim_width / base_width/1.5
-    -- handpet.Transform:SetScale(scale, scale, scale)
     handpet.Transform:SetPosition(0, height*0.75, 0)
 
 
-    if GetModConfigData(modid..'hand_type')==1 then
+    if handpet and handpet.prefab=="hand_pet_q" then
         ---摸的次数，到达就播放BGM
         if inst._hand_pet_count>=10 and doer.components.timer and not doer.components.timer:TimerExists("petpet_music_q_cd") then
             doer.SoundEmitter:PlaySound("Petpet_Anything/Petpet_Anything/petpet_music")
@@ -182,8 +187,39 @@ AddComponentAction("SCENE", "inspectable", function(inst, doer, actions, right)
     end
 end)
 
--- AddComponentAction("SCENE", "locomotor", function(inst, doer, actions, right)
---     if right and inst then
---         table.insert(actions, ACTIONS.HAND_PET_Q)
---     end
--- end)
+local select_mode = "handpet"
+local key = GetModConfigData(modid..'hand_type') or 108
+
+AddModRPCHandler("handpet_tool", "handpet_tool", function(inst)
+    if inst and inst:IsValid() then
+        if inst._handpet_tool_select==nil then
+            inst._handpet_tool_select = 1
+        end
+        inst._handpet_tool_select = inst._handpet_tool_select + 1
+        if inst._handpet_tool_select>tool_size then
+            inst._handpet_tool_select = 1
+        end
+    end
+end)
+
+local function IsHUDScreen()
+	local screen = TheFrontEnd:GetActiveScreen()
+    return screen and screen.name == "HUD"
+end
+local function AddKeyListener(self)
+    if self.owner and self.owner:HasTag("player") then
+        self[select_mode..'handle'] = {}
+        self.inst:ListenForEvent("onremove", function()
+            for _, handler in pairs(self[select_mode..'handle']) do
+                handler:Remove()
+            end
+        end)
+        self[select_mode.."handle"].keydown = TheInput:AddKeyDownHandler(key, function()
+    	if IsHUDScreen() then
+            SendModRPCToServer(MOD_RPC["handpet_tool"]["handpet_tool"])
+    	end
+        end)
+    end
+end
+
+AddClassPostConstruct("widgets/controls", AddKeyListener)
