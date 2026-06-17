@@ -10,11 +10,12 @@ PrefabFiles = {
 
 local modid = 'handpet'
 local distance = GetModConfigData(modid..'hand_distance') or 3
+---摸的工具切换表，格式如下  [数字] = 预制体名  数字要按顺序填 比如现在有[1]和[2]了,那么下一个写[3]
 local handpet_tool = {
     [1] = "hand_pet_q",
     [2] = "metal_pipe_q",
 }
-local tool_size = 2
+local tool_size = 2  ---摸的工具数量
 
 local function DoWobble(inst,doer)
     local duration = 0.3
