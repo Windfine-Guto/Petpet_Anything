@@ -5,20 +5,7 @@ local assets =
     Asset("SOUND", "sound/Petpet_Anything.fsb"),
 }
 
-local HANDPET = {
-    ["hand"] = {  ---key值，随便你怎么填
-        anim = "handpet",   ---播放的动画名
-        sound = "Petpet_Anything/Petpet_Anything/rubber_duck", ---音效
-        prefab = "hand_pet_q",  ---预制体名
-        scale = 3   ---大小
-    },
-    ["metal_pipe"] = {
-        anim = "metal_pipe",
-        sound = "Petpet_Anything/Petpet_Anything/metal_pipe",
-        prefab = "metal_pipe_q",
-        scale = 2
-    }
-}
+local HANDPET = require("handpet_tools_table")
 local function MakeHandpet(n)
     local function fn()
         local inst = CreateEntity()
@@ -58,7 +45,7 @@ local function MakeHandpet(n)
 end
 
 local hand = {}
-for n, data in pairs(HANDPET) do
+for n=1, #HANDPET  do
     table.insert(hand, MakeHandpet(n))
 end
 

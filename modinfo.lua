@@ -1,7 +1,7 @@
 local modid = 'handpet'
 local cur = (locale == 'zh' or locale == 'zhr') and 'zh' or 'en'
 
-version = '1.0.0'
+version = '1.0.1'
 author = 'over_dragon、Guto'
 
 forumthread = ''
