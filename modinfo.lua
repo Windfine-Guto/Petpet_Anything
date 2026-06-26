@@ -1,7 +1,7 @@
 local modid = 'handpet'
 local cur = (locale == 'zh' or locale == 'zhr') and 'zh' or 'en'
 
-version = '1.0.1'
+version = '1.0.2'
 author = 'over_dragon、Guto'
 
 forumthread = ''
@@ -26,7 +26,7 @@ local op={{'A',97},{'B',98},{'C',99},{'D',100},{'E',101},{'F',102},{'G',103},
 local LANGS = {
     ['zh'] = {
         name = '摸摸万物',
-        description = '如果你一直摸一个东西，就会播放一首神秘妙妙音乐。',
+        description = '如果你一直摸一个东西，就会播放一首神秘妙妙音乐……',
         config = {
             {modid..'hand_type','摸的工具切换按键','',108,op},
             {modid..'hand_distance','摸的距离','手的长度',3,{
@@ -39,7 +39,7 @@ local LANGS = {
     },
     ['en'] = {
         name = 'PetPet Anything',
-        description = 'A mysterious whimsical melody will play if you keep petting an object.',
+        description = 'A mysterious whimsical melody will play if you keep petting an object……',
         config = {
             {modid..'hand_type', 'Petting Tool Key', '', 108,op},
             {modid..'hand_distance', 'Hand Reach Distance', 'Hand Length', 3, {
