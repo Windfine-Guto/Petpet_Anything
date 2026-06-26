@@ -18,6 +18,14 @@ for i = 1, #HANDPET do
 end
 local tool_size = #HANDPET
 
+local locale = GLOBAL.LOC.GetLocaleCode()
+local PETTALK
+if locale == "zh" or locale == "zht" or locale=="zhr" then
+    PETTALK = require("handpetstring_zh")
+else
+    PETTALK = require("handpetstring_en")
+end
+
 local function DoWobble(inst,doer)
     local duration = 0.3
     local intensity = 1
@@ -40,6 +48,8 @@ local function DoWobble(inst,doer)
 
     if doer._handpet_tool_select==nil then
         doer._handpet_tool_select = 1
+    elseif doer._handpet_tool_select==0 then
+        return false
     end
 
     local handpet = SpawnPrefab(handpet_tool[doer._handpet_tool_select])
@@ -93,6 +103,10 @@ local function DoWobble(inst,doer)
 
     return true
 end
+
+AddPlayerPostInit(function(inst)
+    inst._handpet_tool_select = 1
+end)
 
 AddStategraphState("wilson",State{
         name = "hand_pet_q",
@@ -184,7 +198,7 @@ AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.HAND_PET_Q, "hand_pet
 AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.HAND_PET_Q, "hand_pet_q"))
 
 AddComponentAction("SCENE", "inspectable", function(inst, doer, actions, right)
-    if right and inst then
+    if right and inst and doer._handpet_tool_select~=0 then
         table.insert(actions, ACTIONS.HAND_PET_Q)
     end
 end)
@@ -192,14 +206,22 @@ end)
 local select_mode = "handpet"
 local key = GetModConfigData(modid..'hand_type') or 108
 
-AddModRPCHandler("handpet_tool", "handpet_tool", function(inst)
+local function SelectTool(inst)
+    if inst._handpet_tool_select==nil then
+        inst._handpet_tool_select = 1
+    end
+    inst._handpet_tool_select = inst._handpet_tool_select + 1
+    if inst._handpet_tool_select>tool_size then
+        inst._handpet_tool_select = 0
+    end
+end
+
+AddModRPCHandler("handpet_tool", "handpet_tool", function(inst,num)
     if inst and inst:IsValid() then
-        if inst._handpet_tool_select==nil then
-            inst._handpet_tool_select = 1
-        end
-        inst._handpet_tool_select = inst._handpet_tool_select + 1
-        if inst._handpet_tool_select>tool_size then
-            inst._handpet_tool_select = 1
+        local talker = inst.components.talker
+        inst._handpet_tool_select = num
+        if talker and PETTALK[num] then
+            talker:Say(PETTALK[num])
         end
     end
 end)
@@ -218,7 +240,8 @@ local function AddKeyListener(self)
         end)
         self[select_mode.."handle"].keydown = TheInput:AddKeyDownHandler(key, function()
     	if IsHUDScreen() then
-            SendModRPCToServer(MOD_RPC["handpet_tool"]["handpet_tool"])
+            SelectTool(self.owner)
+            SendModRPCToServer(MOD_RPC["handpet_tool"]["handpet_tool"],self.owner._handpet_tool_select)
     	end
         end)
     end
